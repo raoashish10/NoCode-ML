@@ -93,6 +93,11 @@ def auto(data, model):
     if type(y[0]) == str:
         y_train = label_enc(y_train)
         y_test = label_enc(y_test)
+        x_train = pd.DataFrame(x_train)
+        y_train = pd.DataFrame(y_train)
+        x_test = pd.DataFrame(x_test)
+        y_test = pd.DataFrame(y_test)
+        
         
     return x_train,x_test,y_train,y_test
     
