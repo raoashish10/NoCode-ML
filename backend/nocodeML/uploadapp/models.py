@@ -5,4 +5,4 @@ class DataSet(models.Model):
     data=models.FileField()
 
     def __str__(self) :
-        return self.file.name
+        return self.data.name
