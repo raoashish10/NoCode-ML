@@ -7,7 +7,7 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework.response import Response
 from .models import DataSet
 from .serializers import DataSetSerializer
-
+import pandas as pd
 # Create your views here.
 
 class FileUploadView(APIView):
@@ -24,3 +24,11 @@ class FileUploadView(APIView):
         #     return Response( file_serializer.data, status=status.HTTP_201_CREATED )
         # else :
         #     return Response( file_serializer.errors, status=status.HTTP_400_BAD_REQUEST )
+    def get(self,request, *args, **kwargs):
+        filename=DataSet.objects.latest('id').data.name
+        df=pd.read_csv('media/'+filename)
+        df_json=dict()
+        df=df.fillna(' ')
+        for i in df.columns:
+            df_json[i]=df[i].iloc[:]
+        return Response(data=df_json)
