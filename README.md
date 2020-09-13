@@ -6,17 +6,17 @@ Our program gives a  choice to each user to pick the model which they want to us
 
 Current models:
 1. Regression:
-* Simple Linear Regression
-* Multiple Linear Regression
-* Polynomial Regression
+    * Simple Linear Regression
+    * Multiple Linear Regression
+    * Polynomial Regression
 2. Classification:
-* Logistical Regression
-* K Nearest Neighbours (KNN)
-* Support Vector Machine (SVM)
-* Naïve Bayes
+    * Logistical Regression
+    * K Nearest Neighbours (KNN)
+    * Support Vector Machine (SVM)
+    * Naïve Bayes
 3. Clustering:
-* K-Means Clustering
-* Hierarchical Clustering
+    * K-Means Clustering
+    * Hierarchical Clustering
     
 After choosing the model to use, the user is then allowed to pick the data pre-processing techniques if he know about them or else we pick them for him
 
