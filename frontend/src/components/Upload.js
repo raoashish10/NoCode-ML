@@ -10,6 +10,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { useStore } from '../context/UserContext';
 
 const useStyles = makeStyles({
     table: {
@@ -22,8 +23,10 @@ const Upload = () => {
 
     const classes = useStyles();
     const [files, setFiles] = useState([]);
-    const [data, setData] = useState(null);
+    const [data, setTable] = useState(null);
     const [uploaded,setUploaded]=useState(false);
+
+    const {setData}=useStore();
 
     const changeHandler = f => {
         setFiles(f);
@@ -39,7 +42,7 @@ const Upload = () => {
             formData.append("file",files[0]);
 
             try {
-                const response = await fetch("http://localhost:8000/api/upload/",{
+                const response = await fetch("http://localhost:8000/api/upload/file",{
                     method: "POST",
                     headers: {
                         "Content-Disposition":"attachment",
@@ -51,6 +54,7 @@ const Upload = () => {
                 console.log(res);
                 if(res.Error===undefined) {
                     alert("File was uploaded successfully");
+                    setTable(res);
                     setData(res);
                     setUploaded(true);
                 }

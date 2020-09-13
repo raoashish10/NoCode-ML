@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Homepage from './components/Homepage';
 import { UserContext } from './context/UserContext';
@@ -9,8 +9,9 @@ import Columns from './components/Columns';
 import Results from './components/Results';
 
 function App() {
-  const [task, setTask] = React.useState('Upload dataset');
-  const store = {task:task, setTask:setTask};
+  const [data,dataSetter] = useState(null);
+  const setData = d => {dataSetter(d)};
+  const store={data:data,setData:setData};
   return (
     <div>
       <UserContext.Provider value={store}>

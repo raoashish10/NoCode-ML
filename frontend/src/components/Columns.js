@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import {Typography} from '@material-ui/core';
@@ -11,6 +11,13 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
+import { useStore } from '../context/UserContext';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
     button: {
       margin: theme.spacing(0.5, 0),
     },
+    table: {
+        minWidth: 650,
+        maxHeight: 400
+      },
   }));
 
   function not(a, b) {
@@ -35,14 +46,42 @@ const useStyles = makeStyles((theme) => ({
   }
 
 const Columns = () => {
+
+
+    
+
+    const {data} = useStore();
     const history = useHistory();
     const classes = useStyles();
+    const [colList,setColList]=useState([]);
   const [checked, setChecked] = React.useState([]);
-  const [left, setLeft] = React.useState([0, 1, 2, 3]);
-  const [right, setRight] = React.useState([4, 5, 6, 7]);
+  const [left, setLeft] = React.useState([]);
+  const [right, setRight] = React.useState([]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);
+
+  const fetchColumns = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/upload/columns");
+            const res = await response.json();
+            if(res.Error===undefined) {
+                setColList(res.Columns);
+                console.log(colList);
+                setLeft(res.Columns);
+            }
+            else {
+                alert(res.Error);
+            }
+        }
+        catch(err) {
+            alert(err);
+        }
+    };
+
+    useEffect(()=>{
+        fetchColumns();
+    },[]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -95,7 +134,7 @@ const Columns = () => {
                   inputProps={{ 'aria-labelledby': labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={`List item ${value + 1}`} />
+              <ListItemText id={labelId} primary={value} />
             </ListItem>
           );
         })}
@@ -111,7 +150,7 @@ const Columns = () => {
                 <Typography style={{display:"inline"}}>Edit target columns</Typography>
                 <Button onClick={()=>history.push("/Models")} style={{display:"inline"}} style={{margin:25}} variant="contained" color="primary">Next</Button>
             </Container>
-            <Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
+            {left===[]&&<Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
             <Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
       <Grid item>{customList(left)}</Grid>
       <Grid item>
@@ -160,7 +199,31 @@ const Columns = () => {
       </Grid>
       <Grid item>{customList(right)}</Grid>
     </Grid>
-            </Container>
+            </Container>}
+            {data!==null&&<Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} size="small" aria-label="csv">
+                        <TableHead>
+                            <TableRow>
+                                {data['Columns'].map(elem=>{
+                                    return <TableCell>{elem}</TableCell>
+                                })}
+                            </TableRow>    
+                        </TableHead>
+                        <TableBody>
+                               {data['Rows'].map(elem=>{
+                                   return (
+                                       <TableRow>
+                                           {Object.keys(elem).map(el=>{
+                                               return <TableCell>{elem[el]}</TableCell>
+                                           })}
+                                       </TableRow>
+                                   );
+                               })} 
+                        </TableBody>    
+                    </Table>    
+                </TableContainer>   
+            </Container>}
         </div> 
     );
 };
