@@ -9,10 +9,10 @@ Created on Sat Sep 12 12:46:31 2020
 import numpy as np
 import pandas as pd
 import statistics as stat
-dataset = pd.read_csv('Data.csv')
-X = dataset.iloc[:, :-1].values
-x = pd.DataFrame(X)
-y = dataset.iloc[:, -1].values
+# dataset = pd.read_csv('Data.csv')
+# X = dataset.iloc[:, :-1].values
+# x = pd.DataFrame(X)
+# y = dataset.iloc[:, -1].values
 
 def missing_value(data, strategy = 'mean'):
     # Stratergies - mean, median, most frequent(mode) or remove.
@@ -40,7 +40,7 @@ def one_hot(data, cells):
         cells = [cells]
     ct = ColumnTransformer(transformers=[('encoder', OneHotEncoder(), cells)], remainder='passthrough')
     data = ct.fit_transform(data)
-    
+
     return pd.DataFrame(data=data)
 
 
@@ -69,16 +69,8 @@ def feature_scaling(data):
                 s = (j-mean)/std    # Standardized Feature Scaling
                 temp.append(s)
             data[i] = temp
-    if len(data.columns>2):
-        data = principle_comp_analy(data)
     return pd.DataFrame(data=data)
 
-## PCA
-from sklearn.decomposition import PCA
-def principle_comp_analy(data):    
-    pca = PCA(n_components = 2)
-    data = pca.fit_transform(data)
-    return data
 
 def auto(data, model='KMeans'):
     X = data.iloc[:, :-1].values
