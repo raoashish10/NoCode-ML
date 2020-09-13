@@ -3,6 +3,8 @@ from django.urls import include
 from uploadapp import views
 from .views import *
 urlpatterns = [
-    path('', FileUploadView.as_view()),
-    
+
+    path('file', FileUploadView.as_view()),
+path('columns', columns.as_view()),
+
 ]
