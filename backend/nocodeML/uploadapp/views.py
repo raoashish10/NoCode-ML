@@ -59,6 +59,5 @@ class columns(APIView):
 
         df=df[cols]
         df.to_csv('media/temp/df.csv')
-        response=Response(status=200)
-        response.set_cookie('df','df')
+        response=Response(status=200,data={'df':'df'})
         return response

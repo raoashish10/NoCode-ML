@@ -15,24 +15,27 @@ def preprocessoption(request):
     auto_code=request.POST['auto']
     featurescale=request.POST['featurescale'] #Check
     label_encoder=request.POST['label_enc']
-    split_data=request.POST['split']
     missing_val=request.POST['missing_value']
     one_hot_encoder=request.POST['one_hot']
 
-    data=pd.read_csv('media/iris_dataset.csv')# Replace with cookie['filename']
+    data=pd.read_csv('media/temp/'+request.POST['df']+'.csv')# Replace with cookie['filename']
     data2=data
-
+    x=data2.iloc[:,:-1]
+    y=data2.iloc[:,-1]
+    x.to_csv('media/temp/x.csv')
+    y.to_csv('media/temp/y.csv')
     if auto_code=='True':
         x_train,x_test,y_train,y_test=auto(data=data2)
         x_train.to_csv('media/temp/x_train.csv')
         x_test.to_csv('media/temp/x_test.csv')
         y_train.to_csv('media/temp/y_train.csv')
         y_test.to_csv('media/temp/y_test.csv')
-        response=Response(status='200')
-        response.set_cookie('x_test','x_test')
-        response.set_cookie('x_train','x_train')
-        response.set_cookie('y_test','y_test')
-        response.set_cookie('y_train','y_train')
+        processedx=pd.concat([x_train,x_test])
+        processedy=pd.concat([y_train,y_test])
+        processedx.to_csv('media/temp/processedx.csv')
+        processedy.to_csv('media/temp/processedy.csv')
+
+        response=Response(status='200',data={'df':'df','processedy':'processedy','processedx':'processedx','x':'x','y':'y','x_test':'x_test','x_train':'x_train','y_test':'y_test','y_train':'y_train'})
         return response
 
 
