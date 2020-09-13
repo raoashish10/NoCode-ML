@@ -9,12 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-dataset = pd.read_csv('Position_Salaries.csv')
-X = dataset.iloc[:, 1:-1].values
-y = dataset.iloc[:, -1].values
-
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.2)
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
@@ -39,12 +33,14 @@ def simple_linear_regression(X_train,X_test,y_train, y_test):
     # plt.show()
     return y_pred, regressor.predict(X_train), mse
 
+
 def multiple_linear_regression(X_train,X_test,y_train, y_test):
     regressor = LinearRegression()
     regressor.fit(X_train, y_train)
     y_pred = regressor.predict(X_test)
     mse = mean_squared_error(y_test,y_pred) 
     return y_pred, mse
+
 
 
 from sklearn.preprocessing import PolynomialFeatures
@@ -60,10 +56,10 @@ def poly_regression(X,y):
     # mse = mean_squared_error(y_test,y_pred)
     # print("MSE at i = ",i," is ",mse)
     
-    # plt.scatter(X, y, color = 'red')
-    # plt.plot(X, lin_reg.predict(poly_reg.fit_transform(X)), color = 'blue')
-    # plt.title('Truth or Bluff (Polynomial Regression)')
-    # plt.xlabel('Position level')
-    # plt.ylabel('Salary')
-    # plt.show()
-    return lin_reg
+    plt.scatter(X, y, color = 'red')
+    plt.plot(X, lin_reg.predict(poly_reg.fit_transform(X)), color = 'blue')
+    plt.title('Truth or Bluff (Polynomial Regression)')
+    plt.xlabel('Position level')
+    plt.ylabel('Salary')
+    plt.show()
+    return lin_reg.predict(poly_reg.fit_transform(X))
