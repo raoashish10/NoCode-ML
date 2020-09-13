@@ -7,12 +7,15 @@ Current models:
 a.	Simple Linear Regression
 b.	Multiple Linear Regression
 c.	Polynomial Regression
+
 2.	Classification:
 a.	Logistical Regression
 b.	K Nearest Neighbours (KNN)
 c.	Support Vector Machine (SVM)
 d.	Naïve Bayes
+
 3.	Clustering:
 a.	K-Means Clustering
 b.	Hierarchical Clustering
+
 After choosing the model to use, the user is then allowed to pick the data pre-processing techniques if he know about them or else we pick them for him.
