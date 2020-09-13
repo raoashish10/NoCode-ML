@@ -1,21 +1,31 @@
 import React, { useState } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import Button from '@material-ui/core/Button';
+import Container from '@material-ui/core/Container';
 
 const Upload = () => {
 
     const [files, setFiles] = useState([]);
+    const [data, setData] = useState(null);
 
     const changeHandler = f => {
         setFiles(f);
     };
 
+    const fetchDetails = async () => {
+        try {
+            const response = await fetch("http://localhost:8000/api/upload/");
+            const res = await response.json();
+            setData(res);
+        }
+        catch(err) {
+            alert(err);
+        }
+    };
+
     const clickHandler = async () => {
         const formData = new FormData();
-        console.log(files[0]);
-        console.log(files[0].name);
         formData.append("file",files[0]);
-        console.log(formData);
 
         try {
             const response = await fetch("http://localhost:8000/api/upload/",{
@@ -27,10 +37,9 @@ const Upload = () => {
                 body: formData 
             });
             const res = await response.json();
-            if(res.status===201) {
-                console.log("good to go mate");
-            }
-            else alert("Some error occurred while uploading the file");
+            fetchDetails();
+            console.log(res);
+            alert("I guess the file was uploaded"); 
         }
         catch(err) {
             alert(err);
@@ -41,6 +50,9 @@ const Upload = () => {
        <div>
            <DropzoneArea onChange={changeHandler}/>
            <Button variant="outlined" color="primary" style={{margin:15}} onClick={clickHandler}>Upload</Button>
+           <Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
+                <h4>Additional details here</h4>     
+            </Container>
        </div> 
     );
 };

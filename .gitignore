@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+_pycache_/
 *.py[cod]
 *$py.class
 
@@ -30,6 +30,8 @@ wheels/
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
+
+frontend/package-lock.json
 
 # Installer logs
 pip-log.txt
@@ -107,9 +109,9 @@ media/
 *.db
 *.pid
 
-**/migrations/**
+backend/nocodeML/**/migrations/*
 !**/migrations
-!**/migrations/__init__.py
+!**/migrations/_init_.py
 
 
 # REACT AND NODE
@@ -126,7 +128,7 @@ yarn-error.log*
 lerna-debug.log*
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
-report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+report.[0-9].[0-9].[0-9].[0-9].json
 
 # Runtime data
 pids
@@ -227,12 +229,12 @@ dist
 
 ### react ###
 .DS_*
-**/*.backup.*
-**/*.back.*
+*/.backup.*
+*/.back.*
 
 node_modules
 
-*.sublime*
+.sublime
 
 psd
 thumb
