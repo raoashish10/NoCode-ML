@@ -12,8 +12,8 @@ import pandas as pd
 
 from sklearn.cluster import KMeans
 
-def KMeans(X):
-    kmeans = KMeans(n_clusters = 6, init = 'k-means++')
+def KMeans(X, n=6):
+    kmeans = KMeans(n_clusters = n, init = 'k-means++')
     y_kmeans = kmeans.fit_predict(X)
     
     # plt.scatter(X[y_kmeans == 0, 0], X[y_kmeans == 0, 1], s = 100, c = 'red', label = 'Cluster 1')
@@ -31,8 +31,8 @@ def KMeans(X):
 
 from sklearn.cluster import AgglomerativeClustering
 
-def HC(X):
-    hc = AgglomerativeClustering(n_clusters = 5, affinity = 'euclidean', linkage = 'ward')
+def HC(X, n = 5):
+    hc = AgglomerativeClustering(n_clusters = n, affinity = 'euclidean', linkage = 'ward')
     y_hc = hc.fit_predict(X)
     
     # plt.scatter(X[y_hc == 0, 0], X[y_hc == 0, 1], s = 100, c = 'red', label = 'Cluster 1')
