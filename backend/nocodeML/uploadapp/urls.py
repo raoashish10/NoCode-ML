@@ -5,6 +5,6 @@ from .views import *
 urlpatterns = [
 
     path('file', FileUploadView.as_view()),
-path('columns', columns.as_view()),
+    path('columns', columns.as_view()),
 
 ]

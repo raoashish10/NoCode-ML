@@ -12,28 +12,40 @@ import pandas as pd
 # Create your views here.
 @api_view(['POST'])
 def preprocessoption(request):
-    auto_code=request.POST['auto']
-    featurescale=request.POST['featurescale'] #Check
-    label_encoder=request.POST['label_enc']
-    missing_val=request.POST['missing_value']
-    one_hot_encoder=request.POST['one_hot']
+    auto_code=request.data['auto']
+    featurescale=request.data['featurescale'] #Check
+    label_encoder=request.data['label_enc']
+    missing_val=request.data['missing_value']
+    one_hot_encoder=request.data['one_hot']
+    model=request.data['model']
+    model_type=request.data['model_type']
 
-    data=pd.read_csv('media/temp/'+request.POST['df']+'.csv')# Replace with cookie['filename']
+    data=pd.read_csv('media/temp/'+request.POST.get('df','Salary_Data')+'.csv')# Replace with cookie['filename']
     data2=data
     x=data2.iloc[:,:-1]
     y=data2.iloc[:,-1]
     x.to_csv('media/temp/x.csv')
     y.to_csv('media/temp/y.csv')
     if auto_code=='True':
-        x_train,x_test,y_train,y_test=auto(data=data2)
+        x_train,x_test,y_train,y_test=auto(data=data2,model=model,model_type=model_type)
         x_train.to_csv('media/temp/x_train.csv')
+        print(x_train.shape)
         x_test.to_csv('media/temp/x_test.csv')
+        print( x_test.shape )
         y_train.to_csv('media/temp/y_train.csv')
+        print( y_train.shape )
         y_test.to_csv('media/temp/y_test.csv')
+        print(y_test.shape )
         processedx=pd.concat([x_train,x_test])
+        print( processedx.shape )
         processedy=pd.concat([y_train,y_test])
+        print( processedy.shape )
+        processedx.reset_index( drop=True, inplace=True )
+        processedy.reset_index( drop=True, inplace=True )
+        processeddata = pd.concat( [processedx, processedy], axis=1 )
         processedx.to_csv('media/temp/processedx.csv')
         processedy.to_csv('media/temp/processedy.csv')
+        processeddata.to_csv( 'media/temp/processeddata.csv' )
 
         response=Response(status='200',data={'df':'df','processedy':'processedy','processedx':'processedx','x':'x','y':'y','x_test':'x_test','x_train':'x_train','y_test':'y_test','y_train':'y_train'})
         return response
@@ -64,6 +76,6 @@ def preprocessoption(request):
 
         print(data2)
         data2.to_csv('media/test.csv')
-        response=Response(status='200')
+        response=Response(status='200',data={"failed":"true"})
         response.set_cookie('data',data2)
         return response
