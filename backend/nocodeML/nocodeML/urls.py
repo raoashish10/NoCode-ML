@@ -24,7 +24,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/upload/', include('uploadapp.urls')),
-    path('api/preprocess/', include('preprocessing.urls'))
+    path('api/preprocess/', include('preprocessing.urls')),
+        path('api/algo/', include('algorithms.urls'))
 ]
 if settings.DEBUG:
   urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
