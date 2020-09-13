@@ -24,12 +24,15 @@ def preprocessoption(request):
 
     if auto_code=='True':
         x_train,x_test,y_train,y_test=auto(data=data2)
-        print(x_train)
+        x_train.to_csv('media/temp/x_train.csv')
+        x_test.to_csv('media/temp/x_test.csv')
+        y_train.to_csv('media/temp/y_train.csv')
+        y_test.to_csv('media/temp/y_test.csv')
         response=Response(status='200')
-        response.set_cookie('x_test',x_test)
-        response.set_cookie('x_train',x_train)
-        response.set_cookie('y_test',y_test)
-        response.set_cookie('y_train',y_train)
+        response.set_cookie('x_test','x_test')
+        response.set_cookie('x_train','x_train')
+        response.set_cookie('y_test','y_test')
+        response.set_cookie('y_train','y_train')
         return response
 
 
@@ -38,7 +41,7 @@ def preprocessoption(request):
         x=data2.iloc[:,:-1]
         y=data2.iloc[:,-1]
 
-        X_train, X_test, y_train, y_test=split(x,y)
+        x_train, x_test, y_train, y_test=split(x,y)
 
         if missing_val=='True':
             x=data2.iloc[:,:-1]
