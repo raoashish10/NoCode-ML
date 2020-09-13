@@ -20,7 +20,27 @@ class FileUploadView(APIView):
         file_serializer = DataSetSerializer(data=request.data)
         file = request.FILES['file']
         data = DataSet.objects.create( data=file )
-        return Response(status=status.HTTP_201_CREATED )
+        try:
+            df=pd.read_csv('media/'+data.data.name)
+            df_json=dict()
+            df=df.fillna(' ')
+            res=dict()
+            colList=[]
+            for i in df.columns:
+                colList.append(i)
+            rowList=[]
+            for i in range(10):
+                ob={}
+                for j in df.columns:
+                    ob[j]=df.iloc[i][j]
+                rowList.append(ob)
+            # for i in df.columns:
+            #     df_json[i]=df[i].iloc[:10]
+            colList.sort()
+            res={"Columns":colList,"Rows":rowList}
+        except Exception as e:
+            res={"Error":str(e)}
+        return Response(data=res,status=status.HTTP_201_CREATED )
         # if file_serializer.is_valid() :
         #     file=request.FILES['file']
         #     data=DataSet.objects.create(data=file)
@@ -59,5 +79,17 @@ class columns(APIView):
 
         df=df[cols]
         df.to_csv('media/temp/df.csv')
-        response=Response(status=200,data={'df':'df'})
+        response=Response(status=200,data={'df':df})
         return response
+
+    def get(self,request,*args,**kwargs):
+        res=dict()
+        try:
+            filename=DataSet.objects.latest('id').data.name
+            df=pd.read_csv('media/'+filename)
+            colList=df.columns
+            res={"Columns":colList}
+        except Exception as e:
+            res={"Error":str(e)}
+        return Response(data=res,status=200)
+
