@@ -35,3 +35,29 @@ class FileUploadView(APIView):
     #     for i in df.columns:
     #         df_json[i]=df[i].iloc[:]
     #     return Response(data=df_json)
+class columns(APIView):
+    parser_classes = (MultiPartParser,)
+
+    def post(self,request,*args,**kwargs):
+        target=request.POST['target']
+        ignored=request.POST['ignored'][1:-1]
+        ignored=ignored.split(',')
+        # ignored=ignored.split(',')
+        filename=DataSet.objects.latest('id').data.name
+        df=pd.read_csv('media/'+filename)
+        for i in range(len(ignored)):
+            char=ignored[i]
+            if char=='1':
+                df.rename(columns={df.columns[i]:'_ignored_'},inplace=True)
+
+        df.drop(['_ignored_'],axis=1,inplace=True)
+
+        cols=df.columns.tolist()
+
+        cols.remove(target)
+        cols.append(target)
+
+        df=df[cols]
+        df.to_csv('media/temp/df.csv')
+        response=Response(status=200,data={'df':'df'})
+        return response

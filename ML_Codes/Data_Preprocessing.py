@@ -69,8 +69,6 @@ def feature_scaling(data):
                 s = (j-mean)/std    # Standardized Feature Scaling
                 temp.append(s)
             data[i] = temp
-    if len(data.columns>2):
-        data = principle_comp_analy(data)
     return pd.DataFrame(data=data)
 
 ## PCA
@@ -78,9 +76,9 @@ from sklearn.decomposition import PCA
 def principle_comp_analy(data):    
     pca = PCA(n_components = 2)
     data = pca.fit_transform(data)
-    return data
+    return pd.DataFrame(data=data)
 
-def auto(data, model='KMeans'):
+def auto(data, model, model_type):
     X = data.iloc[:, :-1].values
     x = pd.DataFrame(X)
     y = data.iloc[:, -1].values
@@ -89,10 +87,15 @@ def auto(data, model='KMeans'):
     for i in x:
         if (type(x.iloc[0,i]) == str):
             cells.append(i)
-    x_train,x_test,y_train,y_test = split(x,y, 0.3)
-    x_train = pd.DataFrame(x_train)
-    x_test = pd.DataFrame(x_test)
-    if model == 'KMeans' or model == 'KNN' or model == 'PCA':
+    if model_type != 'Clustering' or model != 'poly_reg':
+        x_train,x_test,y_train,y_test = split(x,y, 0.3)
+    else:
+        x_train = x
+        y_train = y
+        x_test = x
+        y_test = y
+
+    if model_type == 'Classification' or model_type == 'Clustering':
         x_train = feature_scaling(x_train)
         x_test = feature_scaling(x_test)
     if cells != []:
@@ -101,5 +104,8 @@ def auto(data, model='KMeans'):
     if type(y[0]) == str:
         y_train = label_enc(y_train)
         y_test = label_enc(y_test)
+        
+    if len(data.columns>2):
+        data = principle_comp_analy(data)
 
     return x_train,x_test,y_train,y_test

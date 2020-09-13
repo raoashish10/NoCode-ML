@@ -31,7 +31,7 @@ def KMeans(X, n=6):
 
 from sklearn.cluster import AgglomerativeClustering
 
-def HC(X, n = 5):
+def HC(X, n = 6):
     hc = AgglomerativeClustering(n_clusters = n, affinity = 'euclidean', linkage = 'ward')
     y_hc = hc.fit_predict(X)
     
