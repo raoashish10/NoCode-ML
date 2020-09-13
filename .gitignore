@@ -31,6 +31,8 @@ wheels/
 *.manifest
 *.spec
 
+frontend/package-lock.json
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
@@ -107,7 +109,7 @@ media/
 *.db
 *.pid
 
-*/migrations/*
+backend/nocodeML/**/migrations/*
 !**/migrations
 !**/migrations/_init_.py
 
