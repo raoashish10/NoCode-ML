@@ -2,47 +2,65 @@ import React, { useState } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+
+const useStyles = makeStyles({
+    table: {
+      minWidth: 650,
+      maxHeight: 400
+    },
+  });
 
 const Upload = () => {
 
+    const classes = useStyles();
     const [files, setFiles] = useState([]);
     const [data, setData] = useState(null);
+    const [uploaded,setUploaded]=useState(false);
 
     const changeHandler = f => {
         setFiles(f);
     };
 
-    const fetchDetails = async () => {
-        try {
-            const response = await fetch("http://localhost:8000/api/upload/");
-            const res = await response.json();
-            setData(res);
-        }
-        catch(err) {
-            alert(err);
-        }
-    };
 
     const clickHandler = async () => {
-        const formData = new FormData();
-        formData.append("file",files[0]);
-
-        try {
-            const response = await fetch("http://localhost:8000/api/upload/",{
-                method: "POST",
-                headers: {
-                    "Content-Disposition":"attachment",
-                    "filename":files[0].name
-                },
-                body: formData 
-            });
-            const res = await response.json();
-            fetchDetails();
-            console.log(res);
-            alert("I guess the file was uploaded"); 
+        if(files.length===0) {
+            alert("You need to give me something to upload man");
         }
-        catch(err) {
-            alert(err);
+        else {
+            const formData = new FormData();
+            formData.append("file",files[0]);
+
+            try {
+                const response = await fetch("http://localhost:8000/api/upload/",{
+                    method: "POST",
+                    headers: {
+                        "Content-Disposition":"attachment",
+                        "filename":files[0].name
+                    },
+                    body: formData 
+                });
+                const res = await response.json();
+                console.log(res);
+                if(res.Error===undefined) {
+                    alert("File was uploaded successfully");
+                    setData(res);
+                    setUploaded(true);
+                }
+                else {
+                    alert(res.Error);
+                }
+            }
+            catch(err) {
+                alert(err);
+            }
         }
     };
 
@@ -50,9 +68,30 @@ const Upload = () => {
        <div>
            <DropzoneArea onChange={changeHandler}/>
            <Button variant="outlined" color="primary" style={{margin:15}} onClick={clickHandler}>Upload</Button>
-           <Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
-                <h4>Additional details here</h4>     
-            </Container>
+           {uploaded&&<Container style={{textAlign:"center", padding:35, backgroundColor:"#dce3e6"}}>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} size="small" aria-label="csv">
+                        <TableHead>
+                            <TableRow>
+                                {data['Columns'].map(elem=>{
+                                    return <TableCell>{elem}</TableCell>
+                                })}
+                            </TableRow>    
+                        </TableHead>
+                        <TableBody>
+                               {data['Rows'].map(elem=>{
+                                   return (
+                                       <TableRow>
+                                           {Object.keys(elem).map(el=>{
+                                               return <TableCell>{elem[el]}</TableCell>
+                                           })}
+                                       </TableRow>
+                                   );
+                               })} 
+                        </TableBody>    
+                    </Table>    
+                </TableContainer>   
+            </Container>}
        </div> 
     );
 };
